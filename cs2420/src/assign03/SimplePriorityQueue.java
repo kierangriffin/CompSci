@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 public class SimplePriorityQueue<E> implements PriorityQueue<E> {
-
-    private static final Class<?> E = Object.class;  // Not needed, and it's conflicting with generic type E
     private Comparator<? super E> comparator;
     private E[] sortedArray;
     private int size;
