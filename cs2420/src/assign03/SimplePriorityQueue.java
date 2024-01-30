@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 
-public class SimplePriorityQueue<E> implements PriorityQueue{
+public class SimplePriorityQueue<E> implements PriorityQueue {
 
     private static final Class<?> E = Object.class;
     private Comparator<? super E> comparator;
@@ -13,13 +13,13 @@ public class SimplePriorityQueue<E> implements PriorityQueue{
     private int size;
 
     public SimplePriorityQueue() {
-        size = 0;
+        size = 10;
         sortedArray = (E[]) Array.newInstance(E, size);
         comparator = null;
     }
 
     public SimplePriorityQueue(Comparator<? super E> cmp) {
-        size = 0;
+        size = 10;
         sortedArray = (E[]) Array.newInstance(E, size);
         comparator = cmp;
     }
@@ -61,9 +61,6 @@ public class SimplePriorityQueue<E> implements PriorityQueue{
             sortedArray[i] = sortedArray[i + 1];
         }
 
-        // Set the last element to null to avoid memory leaks (optional)
-        sortedArray[size - 1] = null;
-
         // Update the size
         size--;
 
@@ -88,7 +85,6 @@ public class SimplePriorityQueue<E> implements PriorityQueue{
 
         return maxIndex;
     }
-
 
 
     /**
@@ -118,7 +114,35 @@ public class SimplePriorityQueue<E> implements PriorityQueue{
      */
     @Override
     public boolean contains(Object item) {
-        return false;
+        int index = binarySearch(sortedArray, item);
+
+        return index != -1;
+    }
+
+    private int binarySearch(E[] array, Object item) {
+        int left = 0, right = array.length - 1;
+
+        while (left <= right) {
+            int mid = right / 2;
+
+            int comparisonResult = Integer.parseInt(array[mid].toString());
+
+            if (comparisonResult == 0) {
+                return mid;
+            }
+
+            // if target is greater ignore left half
+            if (comparisonResult < 0) {
+                left = mid + 1;
+            }
+
+            // if target is smaller ignore right half
+            else {
+                right = mid - 1;
+            }
+        }
+
+        return -1;
     }
 
     /**
@@ -126,7 +150,8 @@ public class SimplePriorityQueue<E> implements PriorityQueue{
      */
     @Override
     public int size() {
-        return 0;
+
+        return sortedArray.length - 1;
     }
 
     /**
@@ -134,7 +159,7 @@ public class SimplePriorityQueue<E> implements PriorityQueue{
      */
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 
     /**
@@ -145,4 +170,17 @@ public class SimplePriorityQueue<E> implements PriorityQueue{
     public void clear() {
 
     }
+
+//    returns the index where the target should be
+//
+//    private int binarySearch(E needle) {
+//
+//    }
+
+//    contains
+//       compare target w all index
+//    insert
+//       that's where to put the new value
+
+
 }
