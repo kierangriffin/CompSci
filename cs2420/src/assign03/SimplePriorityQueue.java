@@ -123,7 +123,7 @@ public class SimplePriorityQueue<E> implements PriorityQueue {
         int left = 0, right = array.length - 1;
 
         while (left <= right) {
-            int mid = right / 2;
+            int mid = (left + right) / 2;
 
             int comparisonResult = Integer.parseInt(array[mid].toString());
 
