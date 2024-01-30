@@ -32,7 +32,7 @@ public class SimplePriorityQueue<E> implements PriorityQueue {
      * @return the maximum element
      * @throws NoSuchElementException if the priority queue is empty
      */
-    @Override
+    @Override // NEED TO CHANGE
     public Object findMax() throws NoSuchElementException {
         if (size == 0) {
             throw new NoSuchElementException("Priority queue is empty");
@@ -48,7 +48,7 @@ public class SimplePriorityQueue<E> implements PriorityQueue {
      * @return the maximum element
      * @throws NoSuchElementException if the priority queue is empty
      */
-    @Override
+    @Override // NEED TO CHANGE
     public Object deleteMax() throws NoSuchElementException {
         if (size == 0) {
             throw new NoSuchElementException("Priority queue is empty");
@@ -141,7 +141,7 @@ public class SimplePriorityQueue<E> implements PriorityQueue {
     }
 
     // Helper methods
-    private int binarySearch(E[] array, Object item) {
+    private int binarySearch(E[] array, Object item) { // CHANGE
         int left = 0, right = array.length - 1;
 
         while (left <= right) {
@@ -191,18 +191,5 @@ public class SimplePriorityQueue<E> implements PriorityQueue {
             sortedArray = Arrays.copyOf(sortedArray, newCapacity);
         }
     }
-
-
-//    returns the index where the target should be
-//
-//    private int binarySearch(E needle) {
-//
-//    }
-
-//    contains
-//       compare target w all index
-//    insert
-//       that's where to put the new value
-
 
 }
