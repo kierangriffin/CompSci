@@ -49,7 +49,7 @@ class SimplePriorityQueueTest {
         queue.insert(5);
         queue.insert(10);
         queue.insert(7);
-        assertEquals(5, queue.findMax());
+        assertEquals(10, queue.findMax());
     }
 
     @Test

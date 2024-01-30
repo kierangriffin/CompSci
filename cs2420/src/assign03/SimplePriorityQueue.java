@@ -8,18 +8,18 @@ import java.util.NoSuchElementException;
 public class SimplePriorityQueue<E> implements PriorityQueue<E> {
     private Comparator<? super E> comparator;
     private E[] sortedArray;
-    private int size;
+    private int numElements;
 
     @SuppressWarnings("unchecked")
     public SimplePriorityQueue() {
-        size = 0;  // Start with an empty array
+        numElements = 0;  // Start with an empty array
         sortedArray = (E[]) new Object[10];  // Start with a small initial capacity
         comparator = null;
     }
 
     @SuppressWarnings("unchecked")
     public SimplePriorityQueue(Comparator<? super E> cmp) {
-        size = 0;
+        numElements = 0;
         sortedArray = (E[]) new Object[10];
         comparator = cmp;
     }
@@ -44,9 +44,9 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
         E maxElement = sortedArray[maxIndex];
 
         // Shift elements to the left from the max index
-        System.arraycopy(sortedArray, maxIndex + 1, sortedArray, maxIndex, size - maxIndex - 1);
+        System.arraycopy(sortedArray, maxIndex + 1, sortedArray, maxIndex, numElements - maxIndex - 1);
 
-        size--;
+        numElements--;
 
         return maxElement;
     }
@@ -54,19 +54,19 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
     @Override
     public void insert(E item) {
         // Ensure the array has enough capacity
-        checkCapacity(size + 1);
+        checkCapacity(numElements + 1);
 
         // Find the index where the item should be inserted
         int insertIndex = binarySearch(sortedArray, item);
 
         // Shift elements to the right from the insert index
-        System.arraycopy(sortedArray, insertIndex, sortedArray, insertIndex + 1, size - insertIndex);
+        System.arraycopy(sortedArray, insertIndex, sortedArray, insertIndex + 1, numElements - insertIndex);
 
         // Insert the new item at the insert index
         sortedArray[insertIndex] = item;
 
         // Increment the size
-        size++;
+        numElements++;
     }
 
     @Override
@@ -85,23 +85,23 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
 
     @Override
     public int size() {
-        return size;
+        return numElements;
     }
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return numElements == 0;
     }
 
     @Override
     public void clear() {
-        Arrays.fill(sortedArray, 0, size, null);
-        size = 0;
+        Arrays.fill(sortedArray, 0, numElements, null);
+        numElements = 0;
     }
 
     // Helper methods
     private int binarySearch(E[] array, E item) {
-        int left = 0, right = size - 1;
+        int left = 0, right = numElements - 1;
 
         while (left <= right) {
             int mid = (left + right) / 2;
@@ -125,7 +125,7 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
     private int findMaxIndex() {
         int maxIndex = 0;
 
-        for (int i = 1; i < size; i++) {
+        for (int i = 1; i < numElements; i++) {
             if (compareItems(sortedArray[i], sortedArray[maxIndex]) > 0) {
                 maxIndex = i;
             }
