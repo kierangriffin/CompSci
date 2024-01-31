@@ -177,11 +177,6 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
         }
     }
 
-//    if (minCapacity > sortedArray.length) {
-//        int newCapacity = Math.max(sortedArray.length * 2, minCapacity);
-//        sortedArray = Arrays.copyOf(sortedArray, newCapacity);
-//    }
-
     /**
      * Compares two items using either the natural ordering or the provided comparator.
      *
