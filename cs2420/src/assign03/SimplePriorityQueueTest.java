@@ -3,9 +3,7 @@ package assign03;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.NoSuchElementException;
-import java.util.PriorityQueue;
 
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,6 +64,9 @@ class SimplePriorityQueueTest {
         queue.insert(5);
         queue.insert(10);
         queue.insert(7);
+
+        System.out.println("Elements in the queue: " + Arrays.toString(queue.sortedArray));
+
         assertTrue(queue.contains(7));
         assertFalse(queue.contains(15));
     }

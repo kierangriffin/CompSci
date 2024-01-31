@@ -5,18 +5,31 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 
+/**
+ * A simple implementation of a priority queue using an array-based sorted structure.
+ *
+ * @param <E> the type of elements in the priority queue
+ */
 public class SimplePriorityQueue<E> implements PriorityQueue<E> {
     private Comparator<? super E> comparator;
-    private E[] sortedArray;
+    public E[] sortedArray;
     private int numElements;
 
+    /**
+     * Constructs an empty priority queue with a natural ordering of elements.
+     */
     @SuppressWarnings("unchecked")
     public SimplePriorityQueue() {
-        numElements = 0;  // Start with an empty array
-        sortedArray = (E[]) new Object[10];  // Start with a small initial capacity
+        numElements = 0;
+        sortedArray = (E[]) new Object[10];
         comparator = null;
     }
 
+    /**
+     * Constructs an empty priority queue with the specified comparator.
+     *
+     * @param cmp the comparator to determine the order of elements
+     */
     @SuppressWarnings("unchecked")
     public SimplePriorityQueue(Comparator<? super E> cmp) {
         numElements = 0;
@@ -24,40 +37,48 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
         comparator = cmp;
     }
 
+    /**
+     * Retrieves, but does not remove, the maximum element in this priority queue.
+     *
+     * @return the maximum element
+     * @throws NoSuchElementException if the priority queue is empty
+     */
     @Override
     public E findMax() throws NoSuchElementException {
         if (isEmpty()) {
             throw new NoSuchElementException("Priority queue is empty");
         }
 
-        int maxIndex = findMaxIndex();
-        return sortedArray[maxIndex];
+        return sortedArray[numElements - 1];
     }
 
+    /**
+     * Retrieves and removes the maximum element in this priority queue.
+     *
+     * @return the maximum element
+     * @throws NoSuchElementException if the priority queue is empty
+     */
     @Override
     public E deleteMax() throws NoSuchElementException {
         if (isEmpty()) {
             throw new NoSuchElementException("Priority queue is empty");
         }
 
-        int maxIndex = findMaxIndex();
-        E maxElement = sortedArray[maxIndex];
-
-        // Shift elements to the left from the max index
-        System.arraycopy(sortedArray, maxIndex + 1, sortedArray, maxIndex, numElements - maxIndex - 1);
-
-        numElements--;
+        E maxElement = sortedArray[--numElements];
+        sortedArray[numElements] = null; // optional to avoid potential memory leaks
 
         return maxElement;
     }
 
+    /**
+     * Inserts the specified element into this priority queue.
+     *
+     * @param item the element to insert
+     */
     @Override
     public void insert(E item) {
-        // Ensure the array has enough capacity
         checkCapacity(numElements + 1);
-
-        // Find the index where the item should be inserted
-        int insertIndex = binarySearch(sortedArray, item);
+        int insertIndex = binarySearch(item, true);
 
         // Shift elements to the right from the insert index
         System.arraycopy(sortedArray, insertIndex, sortedArray, insertIndex + 1, numElements - insertIndex);
@@ -65,10 +86,14 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
         // Insert the new item at the insert index
         sortedArray[insertIndex] = item;
 
-        // Increment the size
         numElements++;
     }
 
+    /**
+     * Inserts the specified elements into this priority queue.
+     *
+     * @param coll the collection of elements to insert
+     */
     @Override
     public void insertAll(Collection<? extends E> coll) {
         for (E item : coll) {
@@ -76,37 +101,62 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
         }
     }
 
+    /**
+     * Indicates whether this priority queue contains the specified element.
+     *
+     * @param item the element to be checked for containment in this priority queue
+     * @return true if the priority queue contains the element, false otherwise
+     */
     @Override
     public boolean contains(E item) {
-        int index = binarySearch(sortedArray, item);
-
-        return index != -1;
+        return binarySearch(item, false) != -1;
     }
 
+    /**
+     * Returns the number of elements in this priority queue.
+     *
+     * @return the number of elements in this priority queue
+     */
     @Override
     public int size() {
         return numElements;
     }
 
+    /**
+     * Returns true if this priority queue contains no elements, false otherwise.
+     *
+     * @return true if this priority queue contains no elements, false otherwise
+     */
     @Override
     public boolean isEmpty() {
         return numElements == 0;
     }
 
+    /**
+     * Removes all the elements from this priority queue. The queue will be
+     * empty when this call returns.
+     */
     @Override
     public void clear() {
         Arrays.fill(sortedArray, 0, numElements, null);
         numElements = 0;
     }
 
-    // Helper methods
-    private int binarySearch(E[] array, E item) {
+    /**
+     * Performs binary search on the specified sorted array to find the index of the given item or the position
+     * where the item should be inserted to maintain the array's sorted order.
+     *
+     * @param item     the item to be searched or inserted
+     * @param forInsert true if the search is for insertion, false for regular search
+     * @return The index of the item if found; otherwise, the index where the item should be inserted.
+     */
+    private int binarySearch(E item, boolean forInsert) {
         int left = 0, right = numElements - 1;
 
         while (left <= right) {
             int mid = (left + right) / 2;
 
-            int comparisonResult = compareItems(array[mid], item);
+            int comparisonResult = compareItems(sortedArray[mid], item);
 
             if (comparisonResult == 0) {
                 return mid;
@@ -119,21 +169,14 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
             }
         }
 
-        return left;  // Return the index where the item should be inserted
+        return (forInsert) ? left : -1;  // Return the index where the item should be inserted or -1 if the item is not found
     }
 
-    private int findMaxIndex() {
-        int maxIndex = 0;
-
-        for (int i = 1; i < numElements; i++) {
-            if (compareItems(sortedArray[i], sortedArray[maxIndex]) > 0) {
-                maxIndex = i;
-            }
-        }
-
-        return maxIndex;
-    }
-
+    /**
+     * Checks and adjusts the capacity of the internal sorted array to accommodate at least the specified minimum capacity.
+     *
+     * @param minCapacity The minimum capacity that should be ensured.
+     */
     private void checkCapacity(int minCapacity) {
         if (minCapacity > sortedArray.length) {
             int newCapacity = Math.max(sortedArray.length * 2, minCapacity);
@@ -141,11 +184,14 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
         }
     }
 
+    /**
+     * Compares two items using either the natural ordering or the provided comparator.
+     *
+     * @param item1 The first item to be compared.
+     * @param item2 The second item to be compared.
+     * @return A negative integer, zero, or a positive integer as the first item is less than, equal to, or greater than the second.
+     */
     private int compareItems(E item1, E item2) {
-        if (comparator == null) {
-            return ((Comparable<E>) item1).compareTo(item2);
-        } else {
-            return comparator.compare(item1, item2);
-        }
+        return (comparator == null) ? ((Comparable<E>) item1).compareTo(item2) : comparator.compare(item1, item2);
     }
 }
