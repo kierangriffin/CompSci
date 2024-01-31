@@ -22,7 +22,6 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
     public SimplePriorityQueue() {
         numElements = 0;
         sortedArray = (E[]) new Object[10];
-        comparator = null;
     }
 
     /**
@@ -60,12 +59,8 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
      */
     @Override
     public E deleteMax() throws NoSuchElementException {
-        if (isEmpty()) {
-            throw new NoSuchElementException("Priority queue is empty");
-        }
-
-        E maxElement = sortedArray[--numElements];
-        sortedArray[numElements] = null; // optional to avoid potential memory leaks
+       E maxElement = findMax();
+        -- numElements;
 
         return maxElement;
     }
@@ -80,10 +75,8 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
         checkCapacity(numElements + 1);
         int insertIndex = binarySearch(item, true);
 
-        // Shift elements to the right from the insert index
         System.arraycopy(sortedArray, insertIndex, sortedArray, insertIndex + 1, numElements - insertIndex);
 
-        // Insert the new item at the insert index
         sortedArray[insertIndex] = item;
 
         numElements++;
@@ -169,7 +162,7 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
             }
         }
 
-        return (forInsert) ? left : -1;  // Return the index where the item should be inserted or -1 if the item is not found
+        return (forInsert) ? left : -1;
     }
 
     /**
@@ -179,10 +172,15 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
      */
     private void checkCapacity(int minCapacity) {
         if (minCapacity > sortedArray.length) {
-            int newCapacity = Math.max(sortedArray.length * 2, minCapacity);
-            sortedArray = Arrays.copyOf(sortedArray, newCapacity);
+
+            sortedArray = Arrays.copyOf(sortedArray, 2 * sortedArray.length);
         }
     }
+
+//    if (minCapacity > sortedArray.length) {
+//        int newCapacity = Math.max(sortedArray.length * 2, minCapacity);
+//        sortedArray = Arrays.copyOf(sortedArray, newCapacity);
+//    }
 
     /**
      * Compares two items using either the natural ordering or the provided comparator.
