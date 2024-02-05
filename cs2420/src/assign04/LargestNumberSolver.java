@@ -7,6 +7,10 @@ import java.util.List;
 public class LargestNumberSolver {
 
     public static <T> void insertionSort(T[] arr, Comparator<? super T> cmp) {
+        int n = arr.length;
+        for (int i = 0; i < n; i++) {
+
+        }
 
     }
 
