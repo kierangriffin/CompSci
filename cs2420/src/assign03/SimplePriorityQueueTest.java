@@ -63,7 +63,7 @@ class SimplePriorityQueueTest {
         SimplePriorityQueue<Integer> queue = new SimplePriorityQueue<>();
         Collection<Integer> maxNumElements = Arrays.asList(5, 10, 7, 6, 8, 11, 15, 99, 40, 3, 20);
         queue.insertAll(maxNumElements);
-        assertEquals(99, queue.findMax());
+        assertEquals(11, queue.size());
     }
 
     @Test

@@ -177,11 +177,6 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
         }
     }
 
-//    if (minCapacity > sortedArray.length) {
-//        int newCapacity = Math.max(sortedArray.length * 2, minCapacity);
-//        sortedArray = Arrays.copyOf(sortedArray, newCapacity);
-//    }
-
     /**
      * Compares two items using either the natural ordering or the provided comparator.
      *
@@ -189,6 +184,7 @@ public class SimplePriorityQueue<E> implements PriorityQueue<E> {
      * @param item2 The second item to be compared.
      * @return A negative integer, zero, or a positive integer as the first item is less than, equal to, or greater than the second.
      */
+    @SuppressWarnings("unchecked")
     private int compareItems(E item1, E item2) {
         return (comparator == null) ? ((Comparable<E>) item1).compareTo(item2) : comparator.compare(item1, item2);
     }
