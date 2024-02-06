@@ -74,9 +74,9 @@ public class LargestNumberSolver {
     // main for tests
     public static void main(String[] args) {
         Integer[] array1 = {8, 4, 7, 11}; // should be 87411
-        Integer[] array2 = {2, 4, 7, 11}; // 74211
-        Integer[] array3 = {99, 7, 11, 4, 9, 3, 5, 26}; // 99975432611
-        Integer[] array4 = {6, 8, 10, 45, 1}; // 8645110
+        Integer[] array2 = {2, 4, 7, 11}; // aaaaaaaa
+        Integer[] array3 = {99, 7, 11, 4, 9, 3, 5, 26};
+        Integer[] array4 = {6, 8, 10, 45, 1};
 
         BigInteger largestNumber1 = findLargestNumber(array1);
         BigInteger largestNumber2 = findLargestNumber(array2);
