@@ -13,9 +13,10 @@ public class LargestNumberSolver {
             T key = arr[i];
             int j = i - 1;
 
-            while (j >= 0 && cmp.compare(arr[j], key) < 0) {
-                arr[j + 1] = arr[j];
+            while (j >= 0 && cmp.compare(arr[j], key) > 0) {
+                arr[j + 1] = arr[j]; // move greater elements to left of array
                 j = j - 1;
+
             }
             arr[j + 1] = key;
         }
@@ -66,7 +67,7 @@ public class LargestNumberSolver {
         public int compare(Integer x, Integer y) {
             String XY = x + String.valueOf(y);
             String YX = y + String.valueOf(x);
-            return XY.compareTo(YX);
+            return YX.compareTo(XY);
         }
     }
 
