@@ -1,6 +1,7 @@
 package assign04;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -13,30 +14,25 @@ public class LargestNumberSolver {
             T key = arr[i];
             int j = i - 1;
 
-            while (j >= 0 && cmp.compare(arr[j], key) > 0) {
-                arr[j + 1] = arr[j]; // move greater elements to left of array
-                j = j - 1;
-
+            // Compare elements and move them to the right until the correct position for the key is found.
+            while (j >= 0 && cmp.compare(arr[j], key) < 0) {
+                arr[j + 1] = arr[j];
+                j --;
             }
+            // Place the key in its correct position in the sorted order.
             arr[j + 1] = key;
         }
     }
 
 
     public static BigInteger findLargestNumber(Integer[] arr) {
-        insertionSort(arr, new CustomComparator());
 
-        StringBuilder result = new StringBuilder();
-        for (Integer num : arr) {
-            result.append(num);
-        }
-
-        return new BigInteger(result.toString());
+        return new BigInteger(findHelper(arr));
     }
 
     public static int findLargestInt(Integer[] arr) throws OutOfRangeException {
 
-        return 0;
+        return Integer.parseInt(findHelper(arr));
     }
 
     public static long findLargestLong(Integer[] arr) throws OutOfRangeException {
@@ -61,33 +57,47 @@ public class LargestNumberSolver {
 
     // Helpers
 
+    private static String findHelper(Integer[] arr) {
+        insertionSort(arr, new CustomComparator());
+
+        StringBuilder result = new StringBuilder();
+        for (Integer num : arr) {
+            result.append(num);
+        }
+
+        return result.toString();
+
+    }
+
     // Custom comparator
     private static class CustomComparator implements Comparator<Integer> {
         @Override
         public int compare(Integer x, Integer y) {
             String XY = x + String.valueOf(y);
             String YX = y + String.valueOf(x);
-            return YX.compareTo(XY);
+            return XY.compareTo(YX);
         }
     }
 
-
     // main for tests
     public static void main(String[] args) {
+        Integer[] arr = {4, 8, 1};
+        insertionSort(arr, new CustomComparator());
+        System.out.println(Arrays.toString(arr));  // [8, 4, 1]
+
         Integer[] array1 = {8, 4, 7, 11}; // should be 87411
         Integer[] array2 = {2, 4, 7, 11}; // 74211
-        Integer[] array3 = {99, 7, 11, 4, 9, 3, 5, 26}; // 99975432611
-        Integer[] array4 = {6, 8, 10, 45, 1}; // 8645110
+        Integer[] array3 = {6, 8, 10, 45, 1}; // 8645110
 
-        BigInteger largestNumber1 = findLargestNumber(array1);
-        BigInteger largestNumber2 = findLargestNumber(array2);
-        BigInteger largestNumber3 = findLargestNumber(array3);
-        BigInteger largestNumber4 = findLargestNumber(array4);
+        BigInteger bigInt1 = findLargestNumber(array1);
+        BigInteger bigInt2 = findLargestNumber(array2);
+        int largestInt1 = findLargestInt(array3);
 
-        System.out.println("Largest Number: " + largestNumber1);
-        System.out.println("Largest Number: " + largestNumber2);
-        System.out.println("Largest Number: " + largestNumber3);
-        System.out.println("Largest Number: " + largestNumber4);
+        System.out.println("Largest BigInt: " + bigInt1);
+        System.out.println("Largest BigInt: " + bigInt2);
+        System.out.println("Largest int: " + largestInt1);
+
+
 
     }
 
