@@ -1,9 +1,12 @@
 package assign04;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.math.BigInteger;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 
 public class LargestNumberSolver {
 
@@ -23,7 +26,6 @@ public class LargestNumberSolver {
             arr[j + 1] = key;
         }
     }
-
 
     public static BigInteger findLargestNumber(Integer[] arr) {
 
@@ -51,28 +53,50 @@ public class LargestNumberSolver {
     }
 
     public static List<Integer[]> readFile(String filename) {
+        List<Integer[]> intArraysList = new ArrayList<>();
 
-        return null;
-    }
+        try {
+            File file = new File(filename);
+            Scanner scanner = new Scanner(file);
 
-    // Helpers
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] numbers = line.split("\\s+"); // Split the line into individual numbers
 
-    private static String findHelper(Integer[] arr) {
-        // Sort the array in descending order using insertion sort with a custom comparator.
-        insertionSort(arr, new CustomComparator());
+                // Convert the string numbers to integers and create an Integer array
+                Integer[] intArray = new Integer[numbers.length];
+                // numbers.length is the amount of individual "strings" that have been split across whitespace
+                for (int i = 0; i < numbers.length; i++) {
+                    intArray[i] = Integer.parseInt(numbers[i]);
+                }
 
-        // Concatenate the sorted integers to create a BigInteger representing the largest number.
-        StringBuilder result = new StringBuilder();
-        for (Integer num : arr) {
-            result.append(num);
+                intArraysList.add(intArray);
+            }
+
+            // Closes the scanner when done
+            scanner.close();
+
+        } catch (FileNotFoundException e) {
+            // Handle the case where the file does not exist
+            System.err.println("File not found: " + filename);
         }
 
-        return result.toString();
+        return intArraysList;
+    }
+
+    private static String findHelper(Integer[] arr) {
+    insertionSort(arr, new CustomComparator());
+
+    StringBuilder result = new StringBuilder();
+    for (Integer num : arr) {
+        result.append(num);
+    }
+
+    return result.toString();
 
     }
 
-    // Custom comparator
-    private static class CustomComparator implements Comparator<Integer> {
+    public static class CustomComparator implements Comparator<Integer> {
         @Override
         public int compare(Integer x, Integer y) {
             String XY = x + String.valueOf(y);
@@ -80,30 +104,5 @@ public class LargestNumberSolver {
             return XY.compareTo(YX);
         }
     }
-
-    // main for tests
-    public static void main(String[] args) {
-        Integer[] arr = {4, 8, 1};
-        insertionSort(arr, new CustomComparator());
-        System.out.println(Arrays.toString(arr));  // [8, 4, 1]
-
-        Integer[] array1 = {8, 4, 7, 11}; // should be 87411
-        Integer[] array2 = {2, 4, 7, 11}; // 74211
-        Integer[] array3 = {6, 8, 10, 45, 1}; // 8645110
-        Integer[] array4 = {123, 4, 3, 2394, 657, 86, 54, 3, 42};
-
-        BigInteger bigInt1 = findLargestNumber(array1);
-        BigInteger bigInt2 = findLargestNumber(array2);
-        int largestInt1 = findLargestInt(array3);
-        long largestLong1 = findLargestLong(array4);
-
-        System.out.println("Largest BigInt: " + bigInt1);
-        System.out.println("Largest BigInt: " + bigInt2);
-        System.out.println("Largest int: " + largestInt1);
-        System.out.println("Largest long: " + largestLong1);
-
-
-    }
-
 
 }
