@@ -10,7 +10,7 @@ public class LargestNumberSolver {
     public static <T> void insertionSort(T[] arr, Comparator<? super T> cmp) {
         int n = arr.length;
 
-        for (int i = 1; i < n; ++i) {
+        for (int i = 1; i < n; i++) {
             T key = arr[i];
             int j = i - 1;
 
@@ -37,7 +37,7 @@ public class LargestNumberSolver {
 
     public static long findLargestLong(Integer[] arr) throws OutOfRangeException {
 
-        return 0;
+        return Long.parseLong(findHelper(arr));
     }
 
     public static BigInteger sum(List<Integer[]> list) {
@@ -58,8 +58,10 @@ public class LargestNumberSolver {
     // Helpers
 
     private static String findHelper(Integer[] arr) {
+        // Sort the array in descending order using insertion sort with a custom comparator.
         insertionSort(arr, new CustomComparator());
 
+        // Concatenate the sorted integers to create a BigInteger representing the largest number.
         StringBuilder result = new StringBuilder();
         for (Integer num : arr) {
             result.append(num);
@@ -88,15 +90,17 @@ public class LargestNumberSolver {
         Integer[] array1 = {8, 4, 7, 11}; // should be 87411
         Integer[] array2 = {2, 4, 7, 11}; // 74211
         Integer[] array3 = {6, 8, 10, 45, 1}; // 8645110
+        Integer[] array4 = {123, 4, 3, 2394, 657, 86, 54, 3, 42};
 
         BigInteger bigInt1 = findLargestNumber(array1);
         BigInteger bigInt2 = findLargestNumber(array2);
         int largestInt1 = findLargestInt(array3);
+        long largestLong1 = findLargestLong(array4);
 
         System.out.println("Largest BigInt: " + bigInt1);
         System.out.println("Largest BigInt: " + bigInt2);
         System.out.println("Largest int: " + largestInt1);
-
+        System.out.println("Largest long: " + largestLong1);
 
 
     }
