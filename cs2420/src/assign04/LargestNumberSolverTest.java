@@ -69,16 +69,12 @@ public class LargestNumberSolverTest {
 
     @Test
     void testReadFile() {
-        // Provide the path to a test file with sample data
         String filename = "/Users/kieran/Documents/GitHub/CompSci/cs2420/src/assign04/integers.txt";
 
         List<Integer[]> result = readFile(filename);
 
-        // Assert that the result is not null
         assertNotNull(result);
 
-        // Add additional assertions based on the content of your test file
-        // For example, if your test file has two lines with two integers each:
         assertEquals(903, result.size());
         assertArrayEquals(new Integer[]{410, 21, 93, 80, 69, 379, 20, 60, 432, 13, 72, 62, 70, 83, 9, 3, 14, 11, 62, 55,
                 34, 83, 80, 99, 56, 25, 79, 51, 51, 70, 79, 20, 34, 67, 40, 51, 41, 94, 89, 116, 874, 554, 137, 371, 17,
@@ -92,13 +88,10 @@ public class LargestNumberSolverTest {
         List<String> lines = List.of("1 2 3", "4 5 6", "7 8 9");
         Files.write(testFilePath, lines);
 
-        // Call the readFile method with the path to the created test file
         List<Integer[]> result = readFile(testFilePath.toString());
 
-        // Assert that the result is not null
         assertNotNull(result);
 
-        // Add assertions based on the content of the test file
         assertEquals(3, result.size());
         assertArrayEquals(new Integer[]{1, 2, 3}, result.get(0));
         assertArrayEquals(new Integer[]{4, 5, 6}, result.get(1));
@@ -109,26 +102,20 @@ public class LargestNumberSolverTest {
     void kThrows() {
         ArrayList<Integer[]> arr = new ArrayList<>();
         arr.add(new Integer[]{4, 5, 6, 8, 4, 4});
-        assertThrows(IllegalArgumentException.class, () -> {
-            findKthLargest(arr, 2);
-        });
+        assertThrows(IllegalArgumentException.class, () -> findKthLargest(arr, 2));
     }
 
     @Test
     void kThrows2() {
         ArrayList<Integer[]> arr = new ArrayList<>();
         arr.add(new Integer[]{4, 5, 6, 8, 4, 4});
-        assertThrows(IllegalArgumentException.class, () -> {
-            findKthLargest(arr, -1);
-        });
+        assertThrows(IllegalArgumentException.class, () -> findKthLargest(arr, -1));
     }
 
     @Test
     void testReadNonExistentFile() {
-        // Call the readFile method with a non-existent file
         List<Integer[]> result = readFile("nonexistentfile.txt");
 
-        // Verify that the result is an empty list
         assertTrue(result.isEmpty());
     }
 
@@ -228,22 +215,10 @@ public class LargestNumberSolverTest {
         assertEquals(BigInteger.valueOf(1000775431), result);
     }
 
-    <T> void printArray(T[] arr) {
-        for (T t : arr) {
-            System.out.print(t);
-
-        }
-        System.out.println();
-    }
-
-    // OTHER TESTS
-
     @Test
     void testFindKthLargestWithEmptyList() {
         List<Integer[]> emptyList = new ArrayList<>();
-        assertThrows(IllegalArgumentException.class, () -> {
-            findKthLargest(emptyList, 0);
-        });
+        assertThrows(IllegalArgumentException.class, () -> findKthLargest(emptyList, 0));
     }
 
     @Test
@@ -252,38 +227,29 @@ public class LargestNumberSolverTest {
         list.add(new Integer[]{1, 2, 3});
         list.add(new Integer[]{4, 5, 6});
         list.add(new Integer[]{7, 8, 9});
-        assertThrows(IllegalArgumentException.class, () -> {
-            findKthLargest(list, 3);
-        });
+        assertThrows(IllegalArgumentException.class, () -> findKthLargest(list, 3));
     }
 
     @Test
     void testFindKthLargestWithSmallListAndKZero() {
-        // Create a list with a single array
         List<Integer[]> list = new ArrayList<>();
         list.add(new Integer[]{1, 2, 3});
 
-        // Call findKthLargest with k=0
         Integer[] result = findKthLargest(list, 0);
 
-        // Assert that the result is the same as the original array in the list
         assertArrayEquals(new Integer[]{1, 2, 3}, result, "findKthLargest should return the original array for k=0");
     }
 
     @Test
     void testSumDoesNotModifyInputList() {
-        // Create a sample list
         List<Integer[]> originalList = new ArrayList<>();
         originalList.add(new Integer[]{1, 2, 3});
         originalList.add(new Integer[]{4, 5, 6});
 
-        // Create a copy of the original list
         List<Integer[]> copyList = new ArrayList<>(originalList);
 
-        // Call the sum method
         sum(originalList);
 
-        // Assert that the original list remains unchanged
         assertIterableEquals(copyList, originalList, "The original list should not be modified by the sum method");
     }
 
