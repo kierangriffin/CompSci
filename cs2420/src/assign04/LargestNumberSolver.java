@@ -3,7 +3,10 @@ package assign04;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
 
 
 /**
@@ -37,7 +40,6 @@ public class LargestNumberSolver {
             arr[j + 1] = key;//swap element
         }
     }
-
 
 
     /**
@@ -88,7 +90,7 @@ public class LargestNumberSolver {
     public static BigInteger sum(List<Integer[]> list) {
 //initialize BigInteger for sum and a copy of list
         BigInteger sum = BigInteger.valueOf(0);
-        List<Integer[]> listCopy = List.copyOf(list);
+        List<Integer[]> listCopy = new ArrayList<>(list);
 
         // loop through listCopy and add the largest BigInteger to sum
         for (Integer[] arr : listCopy) {
@@ -105,6 +107,7 @@ public class LargestNumberSolver {
      * This method returns the original array that represents the kth largest number, not the kth largest number itself.
      * An IllegalArgumentExceptionLinks to an external site. is thrown if k is not a valid position in the list.
      * This method must not alter the given list and must call your insertionSort method with a Comparator or lambda expression that you design
+     *
      * @param list- List of given Integer[]
      * @param k     - the kth largest: ie if k=0 largest is same as findLargestInt()
      * @return Integer[] - the kth largest number that can be formed by each array in the given list.
@@ -113,18 +116,18 @@ public class LargestNumberSolver {
     public static Integer[] findKthLargest(List<Integer[]> list, int k) throws IllegalArgumentException {
 
 //cast List to basic array
-        Integer[][] arrayOfInt =new Integer[list.size()][];
+        Integer[][] arrayOfInt = new Integer[list.size()][];
         if (k < 0 || k > list.size() - 1)
             throw new IllegalArgumentException("invalid k index for size " + list.size() + " array");
 // copy elements of list into arrayOfIntArr
-        for(int i =0; i< list.size(); i ++)
-            arrayOfInt[i]= list.get(i);
+        for (int i = 0; i < list.size(); i++)
+            arrayOfInt[i] = list.get(i);
 
         //run insertion sort with lamda on arrayOfInt
-        insertionSort(arrayOfInt,(arr1, arr2)-> findLargestNumberHelper(arr1).compareTo(findLargestNumberHelper(arr2)) );
+        insertionSort(arrayOfInt, (arr1, arr2) -> findLargestNumberHelper(arr1).compareTo(findLargestNumberHelper(arr2)));
 
 
-        return arrayOfInt[k];
+        return arrayOfInt[(arrayOfInt.length - 1) - k];
     }
 
     /**
@@ -169,7 +172,7 @@ public class LargestNumberSolver {
     // Helpers
 
     /**
-     * private helper method that sorts array in decending order
+     * private helper method that sorts array in acending order
      *
      * @param arr - arr to be sorted
      * @return String - largest number combintation
@@ -200,7 +203,6 @@ public class LargestNumberSolver {
         }
 
     }
-
 
 }
 
