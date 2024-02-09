@@ -251,6 +251,6 @@ public class LargestNumberSolverTest {
         sum(originalList);
 
         assertIterableEquals(copyList, originalList, "The original list should not be modified by the sum method");
-    }
+    } //wtf
 
 }

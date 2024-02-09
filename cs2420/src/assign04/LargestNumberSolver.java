@@ -84,7 +84,7 @@ public class LargestNumberSolver {
      * @param list - list of Integer[] given
      * @return BigInteger - 0 if list is empty otherwise the sum of the given lists
      */
-    public static BigInteger sum(List<Integer[]> list) {
+    public static BigInteger sum(List<Integer[]> list) {//wtf
 
         BigInteger sum = BigInteger.valueOf(0);
         List<Integer[]> listCopy = new ArrayList<>(list);
