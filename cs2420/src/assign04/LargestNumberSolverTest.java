@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -19,12 +19,13 @@ public class LargestNumberSolverTest {
     @Test
     void testInsertionSort() {
         Integer[] arr = {4, 2, 7, 11, 9, 3};
-        Integer[] expected = {11, 9, 7, 4, 3, 2};
+
+        Integer[] expected = {2, 3, 4, 7, 9, 11};
         insertionSort(arr, Comparator.naturalOrder());
         assertArrayEquals(expected, arr);
 
         Integer[] arr2 = {99, 50, 3, 2, 6, 7, 9};
-        Integer[] expected2 = {99, 50, 9, 7, 6, 3, 2};
+        Integer[] expected2 = {2, 3, 6, 7, 9, 50, 99};
         insertionSort(arr2, Comparator.naturalOrder());
         assertArrayEquals(expected2, arr2);
     }
@@ -107,6 +108,24 @@ public class LargestNumberSolverTest {
     }
 
     @Test
+    void kThrows() {
+        ArrayList<Integer[]> arr = new ArrayList<>();
+        arr.add(new Integer[]{4, 5, 6, 8, 4, 4});
+        assertThrows(IllegalArgumentException.class, () -> {
+            findKthLargest(arr, 2);
+        });
+    }
+
+    @Test
+    void kThrows2() {
+        ArrayList<Integer[]> arr = new ArrayList<>();
+        arr.add(new Integer[]{4, 5, 6, 8, 4, 4});
+        assertThrows(IllegalArgumentException.class, () -> {
+            findKthLargest(arr, -1);
+        });
+    }
+
+    @Test
     void testReadNonExistentFile() {
         // Call the readFile method with a non-existent file
         List<Integer[]> result = readFile("nonexistentfile.txt");
@@ -115,5 +134,81 @@ public class LargestNumberSolverTest {
         assertTrue(result.isEmpty());
     }
 
+    @Test
+    void testK0() {
+        List<Integer[]> l = new ArrayList<>();
+        l.add(new Integer[]{1, 24, 23});
+        l.add(new Integer[]{1, 1, 1});
+        l.add(new Integer[]{9, 0, 3, 6});
+        l.add(new Integer[]{4, 6, 1, 4});
+        l.add(new Integer[]{0, 0, 0, 9});
+        l.add(new Integer[]{0, 0, 0, 0, 0, 0});
+        Integer[] ar1 = findKthLargest(l, l.size() - 1);
+        assertArrayEquals(ar1, new Integer[]{0, 0, 0, 0, 0, 0});
 
+
+    }
+
+    @Test
+    void testK1() {
+        List<Integer[]> l = new ArrayList<>();
+        l.add(new Integer[]{1, 24, 23});
+        l.add(new Integer[]{1, 1, 1});
+        l.add(new Integer[]{9, 0, 3, 6});
+        l.add(new Integer[]{4, 6, 1, 4});
+        l.add(new Integer[]{0, 0, 0, 9});
+        l.add(new Integer[]{0, 0, 0, 0, 0, 0});
+        Integer[] ar1 = findKthLargest(l, l.size() - 2);
+        assertArrayEquals(ar1, new Integer[]{1, 1, 1});
+
+
+    }
+
+    @Test
+    void testK3() {
+        List<Integer[]> l = new ArrayList<>();
+        l.add(new Integer[]{9, 0, 3, 6});
+        l.add(new Integer[]{4, 6, 1, 4});
+        l.add(new Integer[]{0, 0, 0, 9});
+        l.add(new Integer[]{0, 0, 0, 0, 0, 0});
+        Integer[] ar1 = findKthLargest(l, 1);
+        assertArrayEquals(ar1, new Integer[]{0, 0, 0, 9});
+
+
+    }
+
+    @Test
+    void testK5() {
+        List<Integer[]> l = new ArrayList<>();
+        l.add(new Integer[]{9, 0, 3, 6});
+        l.add(new Integer[]{4, 6, 1, 4});
+        l.add(new Integer[]{0, 0, 0, 9});
+        l.add(new Integer[]{0, 0, 0, 0, 0, 0});
+        Integer[] ar1 = findKthLargest(l, 0);
+
+        assertArrayEquals(ar1, new Integer[]{0, 3, 6, 9});
+
+
+    }
+
+    @Test
+    void testK4() {
+        List<Integer[]> l = new ArrayList<>();
+        l.add(new Integer[]{6});
+        l.add(new Integer[]{4});
+        l.add(new Integer[]{2});
+        l.add(new Integer[]{0});
+        Integer[] ar1 = findKthLargest(l, 0);
+         assertArrayEquals(ar1,new Integer[]{6});
+
+
+    }
+
+    <T> void printArray(T[] arr) {
+        for (T t : arr) {
+            System.out.print(t);
+
+        }
+        System.out.println();
+    }
 }
