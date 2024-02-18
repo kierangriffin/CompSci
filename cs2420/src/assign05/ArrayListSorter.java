@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ArrayListSorter {
 
-    private static final int insertionThreshold = 10;
+    private static final int insertionThreshold = 5;
 
     /**
      * Sorts the input ArrayList using the merge sort algorithm.
