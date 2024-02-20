@@ -153,17 +153,26 @@ public class ArrayListSorter {
     private static <T extends Comparable<? super T>> void insertionSort(ArrayList<T> arr) {
         int size = arr.size();
 
+        // Iterate over the elements starting from the second element (index 1)
         for (int i = 1; i < size; i++) {
+            // Store the current element to be compared and inserted in its correct position
             T key = arr.get(i);
+
+            // Initialize the index for comparing elements to the left of the current element
             int j = i - 1;
 
+            // Compare the current element with elements to its left and shift them if necessary
+            // Move elements greater than the key to the right to make space for the key
             while (j >= 0 && arr.get(j).compareTo(key) > 0) {
-                arr.set(j + 1, arr.get(j));
-                j--;
+                arr.set(j + 1, arr.get(j)); // Shift the element to the right
+                j--; // Move to the next element to the left
             }
+
+            // Insert the key into its correct sorted position
             arr.set(j + 1, key);
         }
     }
+
 
 
 }

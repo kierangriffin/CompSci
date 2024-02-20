@@ -33,7 +33,7 @@ public class ArrayListSorterTest {
 
     // generateAscending tests
     @Test
-    public void testGenerateAscendingWithPositiveSize() {
+    public void testGenerateAscending1() {
         int size = 5;
         ArrayList<Integer> result = generateAscending(size);
 
@@ -50,7 +50,7 @@ public class ArrayListSorterTest {
     }
 
     @Test
-    public void testGenerateAscendingWithZeroSize() {
+    public void testGenerateAscending2() {
         int size = 0;
         ArrayList<Integer> result = generateAscending(size);
 
@@ -62,7 +62,7 @@ public class ArrayListSorterTest {
     }
 
     @Test
-    public void testGenerateAscendingWithNegativeSize() {
+    public void testGenerateAscending3() {
         int size = -5;
         ArrayList<Integer> result = generateAscending(size);
 
