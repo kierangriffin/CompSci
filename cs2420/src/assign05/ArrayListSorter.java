@@ -2,6 +2,7 @@ package assign05;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class ArrayListSorter {
 
@@ -39,7 +40,7 @@ public class ArrayListSorter {
         merge(leftList, rightList, list);
     }
 
-    public static <T extends Comparable<? super T>> void quicksort(ArrayList<T> list) {
+    static <T extends Comparable<T>> void quickSort(ArrayList<T> list) {
 
     }
 
@@ -102,6 +103,7 @@ public class ArrayListSorter {
     }
 
     // private helpers
+
     /**
      * Merges two sorted sublists into a single sorted list.
      *
@@ -111,6 +113,7 @@ public class ArrayListSorter {
      * @param <T> the type of elements in the ArrayList, must implement Comparable
      */
     private static <T extends Comparable<? super T>> void merge(ArrayList<T> leftList, ArrayList<T> rightList, ArrayList<T> list) {
+        // needs to have 4 parameters two indices adn two lists, not sure why.
         int leftSize = leftList.size();
         int rightSize = rightList.size();
         int i = 0, l = 0, r = 0;
@@ -147,33 +150,96 @@ public class ArrayListSorter {
     /**
      * Sorts the input ArrayList using the insertion sort algorithm.
      *
-     * @param arr the ArrayList to be sorted
+     * @param list the ArrayList to be sorted
      * @param <T> the type of elements in the ArrayList, must implement Comparable
      */
-    private static <T extends Comparable<? super T>> void insertionSort(ArrayList<T> arr) {
-        int size = arr.size();
+    private static <T extends Comparable<? super T>> void insertionSort(ArrayList<T> list) {
+        int size = list.size();
 
         // Iterate over the elements starting from the second element (index 1)
         for (int i = 1; i < size; i++) {
             // Store the current element to be compared and inserted in its correct position
-            T key = arr.get(i);
+            T key = list.get(i);
 
             // Initialize the index for comparing elements to the left of the current element
             int j = i - 1;
 
             // Compare the current element with elements to its left and shift them if necessary
             // Move elements greater than the key to the right to make space for the key
-            while (j >= 0 && arr.get(j).compareTo(key) > 0) {
-                arr.set(j + 1, arr.get(j)); // Shift the element to the right
+            while (j >= 0 && list.get(j).compareTo(key) > 0) {
+                list.set(j + 1, list.get(j)); // Shift the element to the right
                 j--; // Move to the next element to the left
             }
 
             // Insert the key into its correct sorted position
-            arr.set(j + 1, key);
+            list.set(j + 1, key);
         }
     }
 
+    // A utility function to swap two elements
+    private static  <T extends Comparable<? super T>> void swap(ArrayList<T> list, int i, int j) {
+        if (i < 0 || i >= list.size() || j < 0 || j >= list.size()) {
+            // Handle or throw an exception for index out of bounds
+            throw new IndexOutOfBoundsException(STR."Index out of bounds: i=\{i}, j=\{j}");
+        }
+
+        T temp = list.get(i);
+        list.set(i, list.get(j));
+        list.set(j, temp);
+    }
+
+
+    private static <T extends Comparable<? super T>> T lowPivot(ArrayList<T> list) { return list.getFirst(); }
+
+    private static <T extends Comparable<? super T>> T highPivot(ArrayList<T> list) { return list.getLast(); }
+
+
+    public static <T> T randomPivot(ArrayList<T> list) {
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("Array should not be null or empty");
+        }
+
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(list.size());
+
+        return list.get(randomIndex);
+    }
+
+    public static <T extends Comparable<? super T>> int partition(ArrayList<T> list, int pivotStrategy) {
+        T pivot = switch (pivotStrategy) {
+            case 1 -> lowPivot(list);
+            case 2 -> highPivot(list);
+            case 3 -> randomPivot(list);
+            default -> throw new IllegalArgumentException(STR."Invalid pivot strategy: \{pivotStrategy}");
+        };
+
+        int i = 0;
+        int j = list.size() - 1;
+
+        while (i <= j) {
+            // Find element on the left side that is greater than or equal to the pivot
+            while (list.get(i).compareTo(pivot) < 0) {
+                i++;
+            }
+
+            // Find element on the right side that is smaller than or equal to the pivot
+            while (list.get(j).compareTo(pivot) > 0) {
+                j--;
+            }
+
+            // Swap the elements found
+            if (i <= j) {
+                swap(list, i, j);
+                i++;
+                j--;
+            }
+        }
+
+        // The index 'i' is the partition point
+        return i;
+    }
 
 
 }
+
 

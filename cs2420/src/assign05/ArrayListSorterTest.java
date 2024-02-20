@@ -13,10 +13,10 @@ public class ArrayListSorterTest {
 
     @Test
     public void testIntegerMergeSort() {
-        ArrayList<Integer> integerList = new ArrayList<>(List.of(4, 2, 8, 5, 1, 6, 3, 7));
+        ArrayList<Integer> integerList = new ArrayList<>(List.of(4, 2, 8, 5, 1, 66, 6, 3, 7, 34, 45));
         mergesort(integerList);
 
-        ArrayList<Integer> expectedIntegerList = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8));
+        ArrayList<Integer> expectedIntegerList = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 34, 45, 66));
         assertEquals(expectedIntegerList, integerList);
     }
 
@@ -29,7 +29,8 @@ public class ArrayListSorterTest {
         assertEquals(expectedStringList, stringList);
     }
 
-    // put quicksort tests here
+    // quicksort tests
+
 
     // generateAscending tests
     @Test
@@ -148,6 +149,7 @@ public class ArrayListSorterTest {
             assertTrue(result.get(i) > result.get(i + 1));
         }
     }
+
 
 
 }
