@@ -2,66 +2,32 @@ package assign05;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public class ArrayListSorter {
 
-    private static final int insertionThreshold = 5;
-
-    public static <T extends Comparable<? super T>> void mergesort(ArrayList<T> list) {
-        mergesortRecursive(list);
-    }
+    private static final int INSERTION_THRESHOLD = 20;
 
     /**
-     * Sorts the input ArrayList using the merge sort algorithm.
-     * If the size of the ArrayList is below or equal to the threshold value,
-     * the algorithm switches to insertion sort for better performance.
+     * Driver method for mergesort
      *
-     * @param list the ArrayList to be sorted
-     * @param <T>  the type of elements in the ArrayList, must implement Comparable
+     * @param list - list to be sorted
      */
-    public static <T extends Comparable<? super T>> void mergesortRecursive(ArrayList<T> list) {
-        int size = list.size();
-        if (size <= 1) return; // base case
-
-        if (size <= insertionThreshold) {
-            // If the size is below or equal to the threshold, switch to insertion sort
-            insertionSort(list);
-            return; // return to avoid extra recursion
+    public static <T extends Comparable<? super T>> void mergesort(ArrayList<T> list) {
+        ArrayList<T> temp = new ArrayList<>(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            temp.add(null); // Pre-allocate space for merging
         }
-
-        int middle = size / 2;
-
-        // create left and right sublists
-        ArrayList<T> leftList = new ArrayList<>(list.subList(0, middle));
-        ArrayList<T> rightList = new ArrayList<>(list.subList(middle, size));
-
-        // recursive call to sort the left and right sublists
-        mergesortRecursive(leftList);
-        mergesortRecursive(rightList);
-
-        // Merge the sorted left and right sublists
-        merge(leftList, rightList, list);
+        mergesort(list, temp, 0, list.size() - 1); //start recursive method
     }
 
     /**
-     * Recursive generic QuickSort method, with three different ways to determine the pivot
+     * Driver quicksort method, with three different ways to determine the pivot
      *
      * @param list- list to be sorted
      */
     public static <T extends Comparable<T>> void quicksort(ArrayList<T> list) {
-        quicksortRecursive(list, 0, list.size()-1);
+        quicksort(list, 0, list.size() - 1);
 
-    }
-
-    private static <T extends Comparable<T>> void quicksortRecursive(ArrayList<T> list, int start, int end) {
-        if (start < end) {
-            int partitionIndex = partition(list, start, end);
-
-            // Recursively sort the sublists on either side of the partition
-            quicksortRecursive(list, start, partitionIndex - 1);
-            quicksortRecursive(list, partitionIndex + 1, end);
-        }
     }
 
     /**
@@ -124,137 +90,76 @@ public class ArrayListSorter {
 
     // private helpers
 
-    /**
-     * Merges two sorted sublists into a single sorted list.
-     *
-     * @param leftList  the left sorted sublist
-     * @param rightList the right sorted sublist
-     * @param list      the main ArrayList to merge into
-     * @param <T>       the type of elements in the ArrayList, must implement Comparable
-     */
-    private static <T extends Comparable<? super T>> void merge(ArrayList<T> leftList, ArrayList<T> rightList, ArrayList<T> list) {
-        // needs to have 4 parameters two indices adn two lists, not sure why.
-        int leftSize = leftList.size();
-        int rightSize = rightList.size();
-        int i = 0, l = 0, r = 0;
+    private static <T extends Comparable<? super T>> void mergesort(ArrayList<T> arrayList, ArrayList<T> temp, int left, int right) {
+        if (right - left <= INSERTION_THRESHOLD) { //if the subarray is <= INSERTION_SORT_THRESHOLD, use insertion sort to sort
+            insertionSort(arrayList, left, right);
 
-        // Compare elements from left and right sublists and merge them into the main list
-        while (l < leftSize && r < rightSize) {
+        } else {
+            int mid = (left + right) / 2; //find mid to split the array
+            mergesort(arrayList, temp, left, mid); //recursive call to get to subarray.length <= INSERTION_SORT_THRESHOLD
+            mergesort(arrayList, temp, mid + 1, right); //recursive call to get to subarray.length <= INSERTION_SORT_THRESHOLD
+            merge(arrayList, temp, left, mid, right); //merges the subarrays together
+        }
+    }
 
-            if (leftList.get(l).compareTo(rightList.get(r)) < 0) {
-                list.set(i, leftList.get(l));
+
+
+    private static <T extends Comparable<? super T>> void merge(ArrayList<T> list, ArrayList<T> temp, int left, int mid, int right) {
+        int size = mid - left + 1; //length of subarrays
+
+        for (int i = 0; i < size; i++) {
+            temp.set(i, list.get(left + i));
+        }
+
+        int i = 0; //while loop counter, also subarray cursor
+        int j = mid + 1; //while loop counter, also subarray cursor
+        int k = left; //array cursor
+
+        while (i < size && j <= right) { //while inside indexes of the subarrays
+            if (temp.get(i).compareTo(list.get(j)) <= 0) { //if temp.get(i) <= arrayList.get(j)
+                list.set(k, temp.get(i)); //set temp.get(i) to arrayList.get(k)
                 i++;
-                l++;
             } else {
-                list.set(i, rightList.get(r));
-                i++;
-                r++;
+                list.set(k, list.get(j)); //set arrayList.get(j) to arrayList.get(k)
+                j++;
             }
+            k++;
         }
 
-        // Copy any remaining elements from the left sublist to the main list
-        while (l < leftSize) {
-            list.set(i, leftList.get(l));
-            i++;
-            l++;
-        }
-
-        // Copy any remaining elements from the right sublist to the main list
-        while (r < rightSize) {
-            list.set(i, rightList.get(r));
-            i++;
-            r++;
+        while (i < size) { //while loop to finish adding values from subarray
+            list.set(k++, temp.get(i++));
         }
     }
 
-    /**
-     * Sorts the input ArrayList using the insertion sort algorithm.
-     *
-     * @param list the ArrayList to be sorted
-     * @param <T>  the type of elements in the ArrayList, must implement Comparable
-     */
-    private static <T extends Comparable<? super T>> void insertionSort(ArrayList<T> list) {
-        int size = list.size();
-
-        // Iterate over the elements starting from the second element (index 1)
-        for (int i = 1; i < size; i++) {
-            // Store the current element to be compared and inserted in its correct position
-            T key = list.get(i);
-
-            // Initialize the index for comparing elements to the left of the current element
-            int j = i - 1;
-
-            // Compare the current element with elements to its left and shift them if necessary
-            // Move elements greater than the key to the right to make space for the key
-            while (j >= 0 && list.get(j).compareTo(key) > 0) {
-                list.set(j + 1, list.get(j)); // Shift the element to the right
-                j--; // Move to the next element to the left
+    private static <T extends Comparable<? super T>> void insertionSort(ArrayList<T> arrayList, int left, int right) {
+        for (int i = left+1; i <= right; i++) { //while inbounds of the subarray (setting i to index 1 of the subarray to start the loop)
+            T currentIndex = arrayList.get(i); //current index checking in subarray
+            int j = i-1; //index below i
+            while (j >= left && arrayList.get(j).compareTo(currentIndex) > 0) { //while j is greater than index -1 of the subarray AND arraylist.get(j) > currentIndex
+                arrayList.set(j+1, arrayList.get(j)); //swap value to new index
+                j--;
             }
-
-            // Insert the key into its correct sorted position
-            list.set(j + 1, key);
+            arrayList.set(j+1, currentIndex); //swap value to new index
         }
     }
 
-    // A utility function to swap two elements
-    private static <T> void swap(ArrayList<T> list, int i, int j) {
-        T temp = list.get(i);
-        list.set(i, list.get(j));
-        list.set(j, temp);
-    }
-
-    /**
-     * Find Pivot 1 returns the index of the middle element for the array that is passed.
-     * If the List is of odd length, the index left of the middle is returned.
-     *
-     * @param list- Array passed
-     * @return int- index for pivot
-     */
-    private static <T> int findPivot1(ArrayList<T> list, int start, int end) {
-
-        return (start-end-1)/2;
-    }
-
-    /**
-     * This method returns a pivot index based on an approximate median from First Middle and Last element of the list passed.
-     *
-     * @param list- list given
-     * @return int - pivot index
-     */
-    private static <T extends Comparable<? super T>> int findPivot2(ArrayList<T> list) {
-        // get three elements and add to array list
-        ArrayList<T> arr = new ArrayList<T>();
-        T first = list.getFirst();
-        T middle = list.get(list.size() / 2);
-        T last = list.getLast();
-        arr.add(first);
-        arr.add(middle);
-        arr.add(last);
-        insertionSort(arr);
-        return list.indexOf(arr.get(1));
-
-    }
-
-
-    /**
-     *
-     * @param list - the list to find the pivot of
-     * @return - the index of the element to pivot around
-     */
-    public static <T> int findPivot3(ArrayList<T> list) {
-        if (list == null || list.isEmpty()) {
-            throw new IllegalArgumentException("Array should not be null or empty");
+    private static <T extends Comparable<T>> void quicksort(ArrayList<T> list, int start, int end) {
+        if ((start - end) <= INSERTION_THRESHOLD) {
+            insertionSort(list, start, end);
+            return;
         }
 
-        Random rand = new Random();
-        return rand.nextInt(list.size());
+        int pivotIndex = partition(list, start, end);
 
+        // Recursively sort the sublists on either side of the partition
+        quicksort(list, start, pivotIndex - 1);
+        quicksort(list, pivotIndex + 1, end);
 
     }
 
-    public static <T extends Comparable<? super T>> int partition(ArrayList<T> list, int start, int end) {
+    private static <T extends Comparable<? super T>> int partition(ArrayList<T> list, int start, int end) {
 
-        int pivotIndex = findPivot1(list,start, end); // using middle for now
+        int pivotIndex = findPivot1(start, end); // using middle for now
         T pivot = list.get(pivotIndex);
         if (start >= end)
             return pivotIndex;
@@ -262,7 +167,6 @@ public class ArrayListSorter {
         int indexFromRight = end;
         //get pivot out of way
         swap(list, pivotIndex, indexFromRight);
-        pivotIndex = indexFromRight;// reassign pivot index
         //main loop that iterates through
         while (indexFromRight > indexFromLeft) {
             // find first item on the left that is greater than the pivot
@@ -278,6 +182,58 @@ public class ArrayListSorter {
 
     }
 
+    private static <T> void swap(ArrayList<T> list, int i, int j) {
+        T temp = list.get(i);
+        list.set(i, list.get(j));
+        list.set(j, temp);
+    }
+
+    /**
+     * Find Pivot 1 returns the index of the middle element for the array that is passed.
+     * If the List is of odd length, the index left of the middle is returned.
+     *
+     * @return int-index for pivot
+     */
+    private static int findPivot1(int start, int end) {
+
+        return (start - end - 1) / 2;
+    }
+
+//    /**
+//     * This method returns a pivot index based on an approximate median from First Middle and Last element of the list passed.
+//     *
+//     * @param list- list given
+//     * @return int - pivot index
+//     */
+//    private static <T extends Comparable<? super T>> int findPivot2(ArrayList<T> list) {
+//        // get three elements and add to array list
+//        ArrayList<T> arr = new ArrayList<T>();
+//        T first = list.getFirst();
+//        T middle = list.get(list.size() / 2);
+//        T last = list.getLast();
+//        arr.add(first);
+//        arr.add(middle);
+//        arr.add(last);
+//        insertionSort(arr);
+//        return list.indexOf(arr.get(1));
+//
+//    }
+
+
+//    /**
+//     * @param list - the list to find the pivot of
+//     * @return - the index of the element to pivot around
+//     */
+//    public static <T> int findPivot3(ArrayList<T> list) {
+//        if (list == null || list.isEmpty()) {
+//            throw new IllegalArgumentException("Array should not be null or empty");
+//        }
+//
+//        Random rand = new Random();
+//        return rand.nextInt(list.size());
+//
+//
+//    }
 
 
 }
