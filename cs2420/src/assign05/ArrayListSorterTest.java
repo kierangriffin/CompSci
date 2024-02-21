@@ -1,36 +1,158 @@
 package assign05;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
 import static assign05.ArrayListSorter.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ArrayListSorterTest {
 
-    @Test
-    public void testMergeSortInteger() {
-        ArrayList<Integer> integerList = new ArrayList<>(List.of(4, 2, 8, 5, 1, 66, 6, 3, 7, 34, 45));
-        mergesort(integerList);
+    public ArrayList<Integer> smallIntArrayList = new ArrayList<>();
+    public ArrayList<Integer> mediumIntArrayList = new ArrayList<>();
+    public ArrayList<Integer> largeIntArrayList = new ArrayList<>();
+    public ArrayList<String> smallStringArrayList = new ArrayList<>();
+    public ArrayList<String> mediumStringArrayList = new ArrayList<>();
+    public ArrayList<String> largeStringArrayList = new ArrayList<>();
 
-        ArrayList<Integer> expectedIntegerList = new ArrayList<>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 34, 45, 66));
-        assertEquals(expectedIntegerList, integerList);
+    @BeforeEach
+    public void setUp() {
+        Random rand = new Random();
+
+        for (int i = 0; i <= 20; i++) {
+            smallIntArrayList.add(rand.nextInt(20));
+            smallStringArrayList.add(generateString());
+        }
+        for (int i = 0; i <= 100; i++) {
+            mediumIntArrayList.add(rand.nextInt(100));
+            mediumStringArrayList.add(generateString());
+        }
+        for (int i = 0; i <= 1000; i++) {
+            largeIntArrayList.add(rand.nextInt(1000));
+            largeStringArrayList.add(generateString());
+        }
+    }
+
+    private String generateString() {
+        Random rand = new Random();
+        int length = rand.nextInt(10) + 1; // length of random strings
+        String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            int index = rand.nextInt(characters.length());
+            stringBuilder.append(characters.charAt(index));
+        }
+        return stringBuilder.toString();
+    }
+
+    // mergesort tests
+
+    @Test
+    public void testMergesortSmallInteger() {
+        mergesort(smallIntArrayList);
+        for (int i = 0; i < smallIntArrayList.size()-1; i++) {
+            assertFalse(smallIntArrayList.get(i) > smallIntArrayList.get(i + 1), "ArrayList is not sorted");
+        }
+
     }
 
     @Test
-    public void testMergeSortString() {
-        ArrayList<String> stringList = new ArrayList<>(List.of("apple", "orange", "banana", "grape", "kiwi"));
-        mergesort(stringList);
+    public void testMergesortMediumInteger() {
+        mergesort(mediumIntArrayList);
+        for (int i = 0; i < mediumIntArrayList.size()-1; i++) {
+            assertFalse(mediumIntArrayList.get(i) > mediumIntArrayList.get(i + 1), "ArrayList is not sorted");
+        }
 
-        ArrayList<String> expectedStringList = new ArrayList<>(List.of("apple", "banana", "grape", "kiwi", "orange"));
-        assertEquals(expectedStringList, stringList);
+    }
+
+    @Test
+    public void testMergesortLargeInteger() {
+        mergesort(largeIntArrayList);
+        for (int i = 0; i < largeIntArrayList.size() - 1; i++) {
+            assertFalse(largeIntArrayList.get(i) > largeIntArrayList.get(i + 1), "ArrayList is not sorted");
+        }
+    }
+
+    @Test
+    public void testMergesortSmallString() {
+        mergesort(smallStringArrayList);
+        for (int i = 0; i < smallStringArrayList.size()-1; i++) {
+            assertFalse(smallStringArrayList.get(i).compareTo(smallStringArrayList.get(i+1)) > 0, "ArrayList is not sorted");
+        }
+    }
+
+    @Test
+    public void testMergesortMediumString() {
+        mergesort(mediumStringArrayList);
+        for (int i = 0; i < mediumStringArrayList.size()-1; i++) {
+            assertFalse(mediumStringArrayList.get(i).compareTo(mediumStringArrayList.get(i+1)) > 0, "ArrayList is not sorted");
+        }
+    }
+
+    @Test
+    public void testMergesortLargeString() {
+        mergesort(largeStringArrayList);
+        for (int i = 0; i < largeStringArrayList.size()-1; i++) {
+            assertFalse(largeStringArrayList.get(i).compareTo(largeStringArrayList.get(i+1)) > 0, "ArrayList is not sorted");
+        }
     }
 
     // quicksort tests
 
+    @Test
+    public void testQuicksortSmallInteger() {
+        quicksort(smallIntArrayList);
+        for (int i = 0; i < smallIntArrayList.size()-1; i++) {
+            assertFalse(smallIntArrayList.get(i) > smallIntArrayList.get(i + 1), "ArrayList is not sorted");
+        }
+
+    }
+
+    @Test
+    public void testQuicksortMediumInteger() {
+        quicksort(mediumIntArrayList);
+        for (int i = 0; i < mediumIntArrayList.size()-1; i++) {
+            assertFalse(mediumIntArrayList.get(i) > mediumIntArrayList.get(i + 1), "ArrayList is not sorted");
+        }
+
+    }
+
+    @Test
+    public void testQuicksortLargeInteger() {
+        quicksort(largeIntArrayList);
+        for (int i = 0; i < largeIntArrayList.size() - 1; i++) {
+            assertFalse(largeIntArrayList.get(i) > largeIntArrayList.get(i + 1), "ArrayList is not sorted");
+        }
+    }
+
+    @Test
+    public void testQuicksortSmallString() {
+        quicksort(smallStringArrayList);
+        for (int i = 0; i < smallStringArrayList.size()-1; i++) {
+            assertFalse(smallStringArrayList.get(i).compareTo(smallStringArrayList.get(i+1)) > 0, "ArrayList is not sorted");
+        }
+    }
+
+    @Test
+    public void testQuicksortMediumString() {
+        quicksort(mediumStringArrayList);
+        for (int i = 0; i < mediumStringArrayList.size()-1; i++) {
+            assertFalse(mediumStringArrayList.get(i).compareTo(mediumStringArrayList.get(i+1)) > 0, "ArrayList is not sorted");
+        }
+    }
+
+    @Test
+    public void testQuicksortLargeString() {
+        quicksort(largeStringArrayList);
+        for (int i = 0; i < largeStringArrayList.size()-1; i++) {
+            assertFalse(largeStringArrayList.get(i).compareTo(largeStringArrayList.get(i+1)) > 0, "ArrayList is not sorted");
+        }
+    }
 
     // generateAscending tests
     @Test
@@ -150,48 +272,5 @@ public class ArrayListSorterTest {
         }
     }
 
-}
-
-
-
-
-
-    @Test
-    public void testPartion() {
-        ArrayList<Integer> integerList = new ArrayList<>(List.of(4, 2, 8, 5, 1, 10, 11, 12));
-        System.out.println(integerList.get(integerList.size()/2 -1));
-     int f =   assign05.ArrayListSorter.partition(integerList,0,integerList.size()-1);
-        print(integerList);
-        System.out.println();
-        System.out.println();
-        System.out.println(f);
-
-
-
-    }
-    @Test
-    public void testPartion02() {
-       System.out.println();
-        System.out.println();
-        ArrayList<Integer> integerList = new ArrayList<>(List.of(4, 2, 8, 5, 1, 10, 11, 12,78,54,78,25,900,-2193,-440));
-        System.out.println(integerList.get(integerList.size()/2 -1));
-      int g =  assign05.ArrayListSorter.partition(integerList,0,integerList.size()-1);
-        print(integerList);
-        System.out.println();
-        System.out.println();
-        System.out.println(g);
-
-
-
-
-    }
-public void print(ArrayList<Integer> arr){
-        for(int e : arr)
-            System.out.print(" "+e+",");
-
-
 
 }
-
-}
-
