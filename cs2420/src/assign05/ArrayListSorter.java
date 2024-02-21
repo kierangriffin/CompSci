@@ -1,5 +1,3 @@
-package assign05;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -7,10 +5,6 @@ import java.util.Random;
 public class ArrayListSorter {
 
     private static final int insertionThreshold = 5;
-
-    public static <T extends Comparable<? super T>> void mergesort(ArrayList<T> list) {
-        mergesortRecursive(list);
-    }
 
     /**
      * Sorts the input ArrayList using the merge sort algorithm.
@@ -20,7 +14,7 @@ public class ArrayListSorter {
      * @param list the ArrayList to be sorted
      * @param <T>  the type of elements in the ArrayList, must implement Comparable
      */
-    public static <T extends Comparable<? super T>> void mergesortRecursive(ArrayList<T> list) {
+    public static <T extends Comparable<? super T>> void mergesort(ArrayList<T> list) {
         int size = list.size();
         if (size <= 1) return; // base case
 
@@ -37,31 +31,28 @@ public class ArrayListSorter {
         ArrayList<T> rightList = new ArrayList<>(list.subList(middle, size));
 
         // recursive call to sort the left and right sublists
-        mergesortRecursive(leftList);
-        mergesortRecursive(rightList);
+        mergesort(leftList);
+        mergesort(rightList);
 
         // Merge the sorted left and right sublists
         merge(leftList, rightList, list);
     }
 
     /**
-     * Recursive generic QuickSort method, with three different ways to determine the pivot
+     * Recursive gerneic QuickSort method, with three differnt ways to determien the pivot
+     * DRIVER
      *
      * @param list- list to be sorted
      */
-    public static <T extends Comparable<T>> void quicksort(ArrayList<T> list) {
-        quicksortRecursive(list, 0, list.size()-1);
+    static <T extends Comparable<T>> void quickSort(ArrayList<T> list) {
+        //find pivot
+        int pivot = findPivot1(list);//method call to find pivot
+        partition(list, pivot);
 
     }
 
-    private static <T extends Comparable<T>> void quicksortRecursive(ArrayList<T> list, int start, int end) {
-        if (start < end) {
-            int partitionIndex = partition(list, start, end);
+    private static <T extends Comparable<T>> void quickSortDriver(ArrayList<T> list) {
 
-            // Recursively sort the sublists on either side of the partition
-            quicksortRecursive(list, start, partitionIndex - 1);
-            quicksortRecursive(list, partitionIndex + 1, end);
-        }
     }
 
     /**
@@ -200,7 +191,7 @@ public class ArrayListSorter {
     private static <T extends Comparable<? super T>> void swap(ArrayList<T> list, int i, int j) {
         if (i < 0 || i >= list.size() || j < 0 || j >= list.size()) {
             // Handle or throw an exception for index out of bounds
-            throw new IndexOutOfBoundsException("Index out of bounds");
+            throw new IndexOutOfBoundsException("Index out of bounds: i=\{i}, j=\{j}");
         }
 
         T temp = list.get(i);
@@ -221,7 +212,7 @@ public class ArrayListSorter {
     }
 
     /**
-     * This method returns a pivot index based on an approximate median from First Middle and Last element of the list passed.
+     * This method returns a pivot index based on an aproxomaite median from First Middle and Last element of the list passed.
      *
      * @param list- list given
      * @return int - pivot index
@@ -241,11 +232,6 @@ public class ArrayListSorter {
     }
 
 
-    /**
-     *
-     * @param list - the list to find the pivot of
-     * @return - the index of the element to pivot around
-     */
     public static <T> int findPivot3(ArrayList<T> list) {
         if (list == null || list.isEmpty()) {
             throw new IllegalArgumentException("Array should not be null or empty");
@@ -257,12 +243,12 @@ public class ArrayListSorter {
 
     }
 
-    public static <T extends Comparable<? super T>> int partition(ArrayList<T> list, int start, int end) {
+    public static <T extends Comparable<? super T>> int partition(ArrayList<T> list) {
         int pivotIndex = findPivot1(list);
         T pivot = list.get(pivotIndex);
 
-        int i = start;
-        int j = end;
+        int i = 0;
+        int j = list.size() - 1;
 
         while (i <= j) {
             // Find element on the left side that is greater than or equal to the pivot
@@ -286,7 +272,6 @@ public class ArrayListSorter {
         // The index 'i' is the partition point
         return i;
     }
-
 
 
 }
