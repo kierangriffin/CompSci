@@ -151,3 +151,47 @@ public class ArrayListSorterTest {
     }
 
 }
+
+
+
+
+
+    @Test
+    public void testPartion() {
+        ArrayList<Integer> integerList = new ArrayList<>(List.of(4, 2, 8, 5, 1, 10, 11, 12));
+        System.out.println(integerList.get(integerList.size()/2 -1));
+     int f =   assign05.ArrayListSorter.partition(integerList,0,integerList.size()-1);
+        print(integerList);
+        System.out.println();
+        System.out.println();
+        System.out.println(f);
+
+
+
+    }
+    @Test
+    public void testPartion02() {
+       System.out.println();
+        System.out.println();
+        ArrayList<Integer> integerList = new ArrayList<>(List.of(4, 2, 8, 5, 1, 10, 11, 12,78,54,78,25,900,-2193,-440));
+        System.out.println(integerList.get(integerList.size()/2 -1));
+      int g =  assign05.ArrayListSorter.partition(integerList,0,integerList.size()-1);
+        print(integerList);
+        System.out.println();
+        System.out.println();
+        System.out.println(g);
+
+
+
+
+    }
+public void print(ArrayList<Integer> arr){
+        for(int e : arr)
+            System.out.print(" "+e+",");
+
+
+
+}
+
+}
+
