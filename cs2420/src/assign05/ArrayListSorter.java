@@ -208,11 +208,11 @@ public class ArrayListSorter {
      * If the List is of odd length, the index left of the middle is returned.
      *
      * @param list- Array passed
-     * @return nt- index for pivot
+     * @return int- index for pivot
      */
-    private static <T> int findPivot1(ArrayList<T> list) {
+    private static <T> int findPivot1(ArrayList<T> list, int start, int end) {
 
-        return list.size() / 2;
+        return (start-end-1)/2;
     }
 
     /**
@@ -253,37 +253,29 @@ public class ArrayListSorter {
     }
 
     public static <T extends Comparable<? super T>> int partition(ArrayList<T> list, int start, int end) {
-        int pivotIndex = findPivot1(list); // using middle for now
+
+        int pivotIndex = findPivot1(list,start, end); // using middle for now
         T pivot = list.get(pivotIndex);
+        if (start >= end)
+            return pivotIndex;
+        int indexFromLeft = start;
+        int indexFromRight = end;
+        //get pivot out of way
+        swap(list, pivotIndex, indexFromRight);
+        pivotIndex = indexFromRight;// reassign pivot index
+        //main loop that iterates through
+        while (indexFromRight > indexFromLeft) {
+            // find first item on the left that is greater than the pivot
+            while (list.get(indexFromLeft).compareTo(pivot) < 0) indexFromLeft++;
+            // find first item on the right that is less than the pivot
+            while (list.get(indexFromRight).compareTo(pivot) > 0) indexFromRight--;
 
-        int i = start;
-        int j = end;
-
-        swap(list, pivotIndex, j);
-
-        while (i <= j) {
-            // Find element on the left side that is greater than or equal to the pivot
-            while (list.get(i).compareTo(pivot) < 0) {
-                i++;
-            }
-
-            // Find element on the right side that is smaller than or equal to the pivot
-            while (list.get(j).compareTo(pivot) > 0) {
-                j--;
-            }
-
-            // Swap the elements found
-            if (i <= j) {
-                swap(list, i, j);
-                i++;
-                j--;
-            }
+            swap(list, indexFromLeft, indexFromRight);
         }
+        //reassign pivot index
+        pivotIndex = indexFromLeft;
+        return pivotIndex;
 
-        swap(list, i, pivotIndex);
-
-        // The index 'i' is the partition point
-        return i;
     }
 
 
