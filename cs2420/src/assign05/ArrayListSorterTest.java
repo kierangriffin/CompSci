@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static assign05.ArrayListSorter.*;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ArrayListSorterTest {
 
     @Test
-    public void testIntegerMergeSort() {
+    public void testMergeSortInteger() {
         ArrayList<Integer> integerList = new ArrayList<>(List.of(4, 2, 8, 5, 1, 66, 6, 3, 7, 34, 45));
         mergesort(integerList);
 
@@ -21,7 +22,7 @@ public class ArrayListSorterTest {
     }
 
     @Test
-    public void testStringMergeSort() {
+    public void testMergeSortString() {
         ArrayList<String> stringList = new ArrayList<>(List.of("apple", "orange", "banana", "grape", "kiwi"));
         mergesort(stringList);
 
@@ -30,6 +31,16 @@ public class ArrayListSorterTest {
     }
 
     // quicksort tests
+
+    @Test
+    public void testQuicksortString() {
+        ArrayList<String> stringList = new ArrayList<>(List.of("apple", "orange", "banana", "grape", "kiwi"));
+
+        quicksort(stringList);
+
+        ArrayList<String> expectedStringList = new ArrayList<>(List.of("apple", "banana", "grape", "kiwi", "orange"));
+        assertEquals(expectedStringList, stringList);
+    }
 
 
     // generateAscending tests
@@ -150,6 +161,42 @@ public class ArrayListSorterTest {
         }
     }
 
+
+    @Test
+    public void testPartition() {
+        ArrayList<Integer> list = new ArrayList<>(Arrays.asList(3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5));
+
+        int pivotIndex = partition(list, 0, list.size() - 1);
+
+        // Verify that elements to the left of pivotIndex are less than or equal to the pivot
+        for (int i = 0; i < pivotIndex; i++) {
+            assertTrue(list.get(i) <= list.get(pivotIndex));
+        }
+
+        // Verify that elements to the right of pivotIndex are greater than or equal to the pivot
+        for (int i = pivotIndex + 1; i < list.size(); i++) {
+            assertTrue(list.get(i) >= list.get(pivotIndex));
+        }
+
+        // Verify that the list is sorted around the pivot
+        assertTrue(isListSortedAroundPivot(list, pivotIndex));
+    }
+
+    private <T extends Comparable<? super T>> boolean isListSortedAroundPivot(List<T> list, int pivotIndex) {
+        for (int i = 0; i < pivotIndex; i++) {
+            if (list.get(i).compareTo(list.get(pivotIndex)) > 0) {
+                return false;
+            }
+        }
+
+        for (int i = pivotIndex + 1; i < list.size(); i++) {
+            if (list.get(i).compareTo(list.get(pivotIndex)) < 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 
 }

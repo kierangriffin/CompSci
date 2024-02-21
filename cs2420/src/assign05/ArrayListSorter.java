@@ -8,15 +8,19 @@ public class ArrayListSorter {
 
     private static final int insertionThreshold = 5;
 
+    public static <T extends Comparable<? super T>> void mergesort(ArrayList<T> list) {
+        mergesortRecursive(list);
+    }
+
     /**
      * Sorts the input ArrayList using the merge sort algorithm.
      * If the size of the ArrayList is below or equal to the threshold value,
      * the algorithm switches to insertion sort for better performance.
      *
      * @param list the ArrayList to be sorted
-     * @param <T> the type of elements in the ArrayList, must implement Comparable
+     * @param <T>  the type of elements in the ArrayList, must implement Comparable
      */
-    public static <T extends Comparable<? super T>> void mergesort(ArrayList<T> list) {
+    public static <T extends Comparable<? super T>> void mergesortRecursive(ArrayList<T> list) {
         int size = list.size();
         if (size <= 1) return; // base case
 
@@ -33,15 +37,31 @@ public class ArrayListSorter {
         ArrayList<T> rightList = new ArrayList<>(list.subList(middle, size));
 
         // recursive call to sort the left and right sublists
-        mergesort(leftList);
-        mergesort(rightList);
+        mergesortRecursive(leftList);
+        mergesortRecursive(rightList);
 
         // Merge the sorted left and right sublists
         merge(leftList, rightList, list);
     }
 
-    static <T extends Comparable<T>> void quickSort(ArrayList<T> list) {
+    /**
+     * Recursive generic QuickSort method, with three different ways to determine the pivot
+     *
+     * @param list- list to be sorted
+     */
+    public static <T extends Comparable<T>> void quicksort(ArrayList<T> list) {
+        quicksortRecursive(list, 0, list.size()-1);
 
+    }
+
+    private static <T extends Comparable<T>> void quicksortRecursive(ArrayList<T> list, int start, int end) {
+        if (start < end) {
+            int partitionIndex = partition(list, start, end);
+
+            // Recursively sort the sublists on either side of the partition
+            quicksortRecursive(list, start, partitionIndex - 1);
+            quicksortRecursive(list, partitionIndex + 1, end);
+        }
     }
 
     /**
@@ -107,10 +127,10 @@ public class ArrayListSorter {
     /**
      * Merges two sorted sublists into a single sorted list.
      *
-     * @param leftList the left sorted sublist
+     * @param leftList  the left sorted sublist
      * @param rightList the right sorted sublist
-     * @param list the main ArrayList to merge into
-     * @param <T> the type of elements in the ArrayList, must implement Comparable
+     * @param list      the main ArrayList to merge into
+     * @param <T>       the type of elements in the ArrayList, must implement Comparable
      */
     private static <T extends Comparable<? super T>> void merge(ArrayList<T> leftList, ArrayList<T> rightList, ArrayList<T> list) {
         // needs to have 4 parameters two indices adn two lists, not sure why.
@@ -151,7 +171,7 @@ public class ArrayListSorter {
      * Sorts the input ArrayList using the insertion sort algorithm.
      *
      * @param list the ArrayList to be sorted
-     * @param <T> the type of elements in the ArrayList, must implement Comparable
+     * @param <T>  the type of elements in the ArrayList, must implement Comparable
      */
     private static <T extends Comparable<? super T>> void insertionSort(ArrayList<T> list) {
         int size = list.size();
@@ -177,10 +197,10 @@ public class ArrayListSorter {
     }
 
     // A utility function to swap two elements
-    private static  <T extends Comparable<? super T>> void swap(ArrayList<T> list, int i, int j) {
+    private static <T extends Comparable<? super T>> void swap(ArrayList<T> list, int i, int j) {
         if (i < 0 || i >= list.size() || j < 0 || j >= list.size()) {
             // Handle or throw an exception for index out of bounds
-            throw new IndexOutOfBoundsException(STR."Index out of bounds: i=\{i}, j=\{j}");
+            throw new IndexOutOfBoundsException("Index out of bounds");
         }
 
         T temp = list.get(i);
@@ -188,33 +208,61 @@ public class ArrayListSorter {
         list.set(j, temp);
     }
 
+    /**
+     * Find Pivot 1 returns the index of the middle element for the array that is passed.
+     * If the List is of odd length, the index left of the middle is returned.
+     *
+     * @param list- Array passed
+     * @return nt- index for pivot
+     */
+    private static <T extends Comparable<? super T>> int findPivot1(ArrayList<T> list) {
 
-    private static <T extends Comparable<? super T>> T lowPivot(ArrayList<T> list) { return list.getFirst(); }
+        return list.size() / 2;
+    }
 
-    private static <T extends Comparable<? super T>> T highPivot(ArrayList<T> list) { return list.getLast(); }
+    /**
+     * This method returns a pivot index based on an approximate median from First Middle and Last element of the list passed.
+     *
+     * @param list- list given
+     * @return int - pivot index
+     */
+    private static <T extends Comparable<? super T>> int findPivot2(ArrayList<T> list) {
+        // get three elements and add to array list
+        ArrayList<T> arr = new ArrayList<T>();
+        T first = list.getFirst();
+        T middle = list.get(list.size() / 2);
+        T last = list.getLast();
+        arr.add(first);
+        arr.add(middle);
+        arr.add(last);
+        insertionSort(arr);
+        return list.indexOf(arr.get(1));
+
+    }
 
 
-    public static <T> T randomPivot(ArrayList<T> list) {
+    /**
+     *
+     * @param list - the list to find the pivot of
+     * @return - the index of the element to pivot around
+     */
+    public static <T> int findPivot3(ArrayList<T> list) {
         if (list == null || list.isEmpty()) {
             throw new IllegalArgumentException("Array should not be null or empty");
         }
 
         Random rand = new Random();
-        int randomIndex = rand.nextInt(list.size());
+        return rand.nextInt(list.size());
 
-        return list.get(randomIndex);
+
     }
 
-    public static <T extends Comparable<? super T>> int partition(ArrayList<T> list, int pivotStrategy) {
-        T pivot = switch (pivotStrategy) {
-            case 1 -> lowPivot(list);
-            case 2 -> highPivot(list);
-            case 3 -> randomPivot(list);
-            default -> throw new IllegalArgumentException(STR."Invalid pivot strategy: \{pivotStrategy}");
-        };
+    public static <T extends Comparable<? super T>> int partition(ArrayList<T> list, int start, int end) {
+        int pivotIndex = findPivot1(list);
+        T pivot = list.get(pivotIndex);
 
-        int i = 0;
-        int j = list.size() - 1;
+        int i = start;
+        int j = end;
 
         while (i <= j) {
             // Find element on the left side that is greater than or equal to the pivot
@@ -240,6 +288,5 @@ public class ArrayListSorter {
     }
 
 
+
 }
-
-
