@@ -1,11 +1,13 @@
-package assign05;
+
+
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class ArrayListSorter {
 
-    private static final int INSERTION_THRESHOLD = 20;
+    private static final int INSERTION_THRESHOLD = 10;
 
     /**
      * Driver method for mergesort
@@ -103,7 +105,6 @@ public class ArrayListSorter {
     }
 
 
-
     private static <T extends Comparable<? super T>> void merge(ArrayList<T> list, ArrayList<T> temp, int left, int mid, int right) {
         int size = mid - left + 1; //length of subarrays
 
@@ -132,14 +133,14 @@ public class ArrayListSorter {
     }
 
     private static <T extends Comparable<? super T>> void insertionSort(ArrayList<T> arrayList, int left, int right) {
-        for (int i = left+1; i <= right; i++) { //while inbounds of the subarray (setting i to index 1 of the subarray to start the loop)
+        for (int i = left + 1; i <= right; i++) { //while inbounds of the subarray (setting i to index 1 of the subarray to start the loop)
             T currentIndex = arrayList.get(i); //current index checking in subarray
-            int j = i-1; //index below i
+            int j = i - 1; //index below i
             while (j >= left && arrayList.get(j).compareTo(currentIndex) > 0) { //while j is greater than index -1 of the subarray AND arraylist.get(j) > currentIndex
-                arrayList.set(j+1, arrayList.get(j)); //swap value to new index
+                arrayList.set(j + 1, arrayList.get(j)); //swap value to new index
                 j--;
             }
-            arrayList.set(j+1, currentIndex); //swap value to new index
+            arrayList.set(j + 1, currentIndex); //swap value to new index
         }
     }
 
@@ -159,7 +160,7 @@ public class ArrayListSorter {
 
     private static <T extends Comparable<? super T>> int partition(ArrayList<T> list, int start, int end) {
 
-        int pivotIndex = findPivot1(start, end); // using middle for now
+        int pivotIndex = findPivot3(list, start, end); // using middle for now
         T pivot = list.get(pivotIndex);
         if (start >= end)
             return pivotIndex;
@@ -194,46 +195,40 @@ public class ArrayListSorter {
      *
      * @return int-index for pivot
      */
-    private static int findPivot1(int start, int end) {
+    private static <T> int findPivot1(ArrayList<T> list, int start, int end) {
 
         return (start - end - 1) / 2;
     }
 
-//    /**
-//     * This method returns a pivot index based on an approximate median from First Middle and Last element of the list passed.
-//     *
-//     * @param list- list given
-//     * @return int - pivot index
-//     */
-//    private static <T extends Comparable<? super T>> int findPivot2(ArrayList<T> list) {
-//        // get three elements and add to array list
-//        ArrayList<T> arr = new ArrayList<T>();
-//        T first = list.getFirst();
-//        T middle = list.get(list.size() / 2);
-//        T last = list.getLast();
-//        arr.add(first);
-//        arr.add(middle);
-//        arr.add(last);
-//        insertionSort(arr);
-//        return list.indexOf(arr.get(1));
-//
-//    }
+    /**
+     * This method returns a pivot index based on an approximate median from First Middle and Last element of the list passed.
+     *
+     * @param list- list given
+     * @return int - pivot index
+     */
+    private static <T extends Comparable<? super T>> int findPivot2(ArrayList<T> list, int start, int end) {
+        // get three elements and add to array list
+        ArrayList<T> arr = new ArrayList<T>();
+        T first = list.get(start);
+        T middle = list.get(end-start / 2);
+        T last = list.get(end);
+        arr.add(first);
+        arr.add(middle);
+        arr.add(last);
+        Collections.sort(arr);
+        return list.indexOf(arr.get(1));
+
+    }
 
 
-//    /**
-//     * @param list - the list to find the pivot of
-//     * @return - the index of the element to pivot around
-//     */
-//    public static <T> int findPivot3(ArrayList<T> list) {
-//        if (list == null || list.isEmpty()) {
-//            throw new IllegalArgumentException("Array should not be null or empty");
-//        }
-//
-//        Random rand = new Random();
-//        return rand.nextInt(list.size());
-//
-//
-//    }
+    /**
+     * @param list - the list to find the pivot of
+     * @return - the index of the element to pivot around
+     */
+    public static <T> int findPivot3(ArrayList<T> list, int start, int end) {
+        Random rand = new Random();
+        return  rand.nextInt(start,end);
+    }
 
 
 }
